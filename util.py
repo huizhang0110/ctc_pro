@@ -25,7 +25,7 @@ def load_state(ckpt_dir, step, model, optimizer=None):
         print("=> no checkpoint found at %s." % save_filepath)
 
 
-def test_model(test_dataloader, label_map, model):
+def test_model(test_dataloader, label_map, model, print_result=False):
     with torch.no_grad():
         model.eval()
         num_correct, num_total = 0, 0
@@ -40,6 +40,8 @@ def test_model(test_dataloader, label_map, model):
                 if pred_str == label_str:
                     num_correct += 1
                 num_total += 1
+                if print_result:
+                    print("%s %s" % (label_str, pred_str))
         model.train()
     accuracy = num_correct / num_total
     print("=> test accuracy: %.4f" % accuracy)

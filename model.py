@@ -23,3 +23,4 @@ if __name__ == "__main__":
     net = CTCModel(10)
     x = net(x) 
     print(x.shape)
+

@@ -208,13 +208,10 @@ class ResNet50Tiny(nn.Module):
 
         self.inplanes = 32
         self.layer1 = self._make_layer(32,  3, [2, 2])
-        self.non_local_1 = NONLocalBlock2D(32, sub_sample=False, bn_layer=True)
 
         self.layer2 = self._make_layer(64,  4, [2, 2])
-        self.non_local_2 = NONLocalBlock2D(64, sub_sample=False, bn_layer=True)
 
         self.layer3 = self._make_layer(128, 6, [2, 1])
-        self.non_local_3 = NONLocalBlock2D(128, sub_sample=False, bn_layer=True)
 
         self.layer4 = self._make_layer(256, 6, [2, 1])
         self.non_local_4 = NONLocalBlock2D(256, sub_sample=False, bn_layer=True)
@@ -245,17 +242,11 @@ class ResNet50Tiny(nn.Module):
 
     def forward(self, x):
         x = self.layer0(x)
-
         x = self.layer1(x)
-        x = self.non_local_1(x)
         x = self.layer2(x)
-        x = self.non_local_2(x)
         x = self.layer3(x)
-        x = self.non_local_3(x)
         x = self.layer4(x)
-        x = self.non_local_4(x)
         x = self.layer5(x)
-        x = self.non_local_5(x)
         return x
 
 
