@@ -1,20 +1,33 @@
 import torch
 import torch.nn as nn
 from resnet import ResNet50Tiny
-from lib.non_local_embedded_gaussian import NONLocalBlock1D
+
+
+class BiLSTM(nn.Module):
+
+    def __init__(self, n_in, n_hidden, n_out):
+        super(BiLSTM, self).__init__()
+        self.rnn = nn.LSTM(n_in, n_hidden, bidirectional=True)
+        self.fc = nn.Linear(n_hidden * 2, n_out)
+
+    def forward(self, x):
+        h, c = self.rnn(x)
+        out = self.fc(h)
+        return out
 
 
 class CTCModel(nn.Module):
-    def __init__(self, n_classes):
+    def __init__(self, n_classes, n_hidden=256):
         super(CTCModel, self).__init__()
         self.cnn = ResNet50Tiny()
-        self.non_local = NONLocalBlock1D(512, sub_sample=False, bn_layer=True)
-        self.fc = nn.Linear(512, n_classes)
+        self.rnn = nn.Sequential(
+                BiLSTM(512, n_hidden, n_hidden),
+                BiLSTM(n_hidden, n_hidden, n_classes))
 
     def forward(self, x):
         x = self.cnn(x).squeeze(dim=2)
-        x = self.non_local(x).permute(0, 2, 1)
-        x = self.fc(x)
+        x = x.permute(0, 2, 1)
+        x = self.rnn(x)
         return x
 
 

@@ -31,7 +31,7 @@ else:
     test_file = "benchmarks/IIIT5k/IIII5k.tags"
     batch_size = 64
     num_workers = 16
-    ckpt_dir = "experiments/master"
+    ckpt_dir = "experiments/ctc"
 
 # ==== data input pipeline ====
 label_map = LabelMap()
